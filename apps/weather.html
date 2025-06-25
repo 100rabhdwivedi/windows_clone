@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Premium Weather UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            background: linear-gradient(to right, #1f1f1f, #2c2c2c);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4 text-white font-sans">
+
+    <div class="w-full max-w-4xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-6 space-y-6">
+
+        <!-- Search Input -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <input id="location-input" type="text" placeholder="Search city (e.g. Delhi)"
+                class="bg-white/10 text-white placeholder-gray-400 p-3 rounded-xl w-full sm:max-w-sm outline-none text-center" />
+            <p id="city-name" class="text-sm text-gray-300">Detecting location...</p>
+        </div>
+
+        <!-- Weather Info -->
+        <div id="weather" class="grid sm:grid-cols-2 gap-6 items-center">
+            <div class="text-center sm:text-left space-y-2">
+                <h1 class="text-6xl font-bold" id="temperature">--°C</h1>
+                <p class="text-xl text-yellow-400" id="condition">--</p>
+                <div class="text-sm text-gray-300 mt-4 space-y-1">
+                    <p id="wind">Wind: --</p>
+                    <p id="humidity">Humidity: --</p>
+                    <p id="last-updated">Last updated: --</p>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <img id="weather-icon" src="" alt="Weather Icon" class="w-32 h-32" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('location-input');
+        const cityName = document.getElementById('city-name');
+        const temp = document.getElementById('temperature');
+        const cond = document.getElementById('condition');
+        const wind = document.getElementById('wind');
+        const humidity = document.getElementById('humidity');
+        const updated = document.getElementById('last-updated');
+        const icon = document.getElementById('weather-icon');
+
+        async function fetchWeather(location) {
+            try {
+                cityName.innerText = `Loading weather for "${location}"...`;
+                const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=8d084dc36b1d426b8fc83544252006&q=${location}`);
+                const data = await res.json();
+
+                const weather = data.current;
+                const loc = data.location;
+
+                cityName.innerText = `📍 ${loc.name}, ${loc.region || loc.country}`;
+                temp.innerText = `${weather.temp_c}°C`;
+                cond.innerText = weather.condition.text;
+                wind.innerText = `Wind: ${weather.wind_kph} km/h`;
+                humidity.innerText = `Humidity: ${weather.humidity}%`;
+                updated.innerText = `Last updated: ${weather.last_updated}`;
+                icon.src = `https:${weather.condition.icon}`;
+            } catch (error) {
+                cityName.innerText = "❌ Failed to fetch weather data.";
+                temp.innerText = "--°C";
+                cond.innerText = "--";
+                wind.innerText = "Wind: --";
+                humidity.innerText = "Humidity: --";
+                updated.innerText = "Last updated: --";
+                icon.src = "";
+            }
+        }
+
+        // Handle manual search
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const city = input.value.trim();
+                if (city !== '') {
+                    fetchWeather(city);
+                }
+            }
+        });
+
+        // Auto detect location using Geolocation API
+        function detectLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchWeather(`${lat},${lon}`);
+                }, () => {
+                    fetchWeather("Rewa"); // fallback default
+                });
+            } else {
+                fetchWeather("Rewa"); // fallback default
+            }
+        }
+
+        detectLocation();
+    </script>
+
+</body>
+
+</html>

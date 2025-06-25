@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows</title>
+    <link rel="icon" href="./assets/windows_fav.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="relative w-full text-white overflow-hidden">
+    <!-- Background Wrapper -->
+    <div id="bg-wrapper" class="absolute inset-0 -z-10 transition-all duration-300">
+        <img src="./assets/wallpaper.jpg" alt="Wallpaper" class="w-full h-full object-cover" id="bg-image" />
+    </div>
+
+    <!-- Desktop Icons -->
+    <div class="desktop-win absolute top-5 left-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 z-0"></div>
+
+    <!-- Start Menu -->
+    <div id="start-menu"
+        class="absolute hidden menu bottom-[3.8rem] left-1/2 -translate-x-1/2 w-[40rem] h-[42rem] bg-[#1e1e1e] rounded-xl shadow-lg z-20 text-white p-8">
+        <!-- Search -->
+        <div class="flex items-center gap-2 px-4 py-2 bg-[#2e2e2e] rounded-lg">
+            <i class="ri-search-line text-gray-400"></i>
+            <input type="text" placeholder="Search for apps, settings, and documents"
+                class="bg-transparent outline-none w-full text-sm text-white placeholder-gray-400" />
+        </div>
+
+        <!-- Pinned Apps -->
+        <div class="flex justify-between mt-4 mb-2 text-sm text-gray-300 px-4">
+            <h2>Pinned</h2>
+            <h2 class="px-2 py-1 bg-white/25 rounded-md text-xs">All <i class="ri-arrow-right-wide-line"></i></h2>
+        </div>
+        <div class="grid grid-cols-5 gap-4 pin-icon"></div>
+
+
+
+        <!-- Profile + Power -->
+        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center px-12">
+            <div class="flex items-center gap-4">
+                <img src="./assets/user.png" class="w-8 h-8 rounded-full" />
+                <span class="text-sm">Saurabh dwivedi</span>
+            </div>
+            <i class="ri-shut-down-line text-xl"></i>
+        </div>
+    </div>
+    <div id="wallpaper-changer" class="absolute bottom-20 left-4 z-50 p-4 bg-[#2e2e2e]/80 rounded-md text-white">
+        <label for="wallpaper-input" class="cursor-pointer underline">Change Wallpaper</label>
+        <input type="file" id="wallpaper-input" accept="image/*" class="hidden" />
+    </div>
+
+    <!-- Taskbar -->
+    <div class="fixed bottom-0 px-4 w-full h-[3.8rem] flex justify-between items-center text-sm z-10">
+        <div id="weather-info" class="flex items-center gap-2">
+            <span>Loading...</span>
+        </div>
+        <div class="flex items-center gap-5">
+            <div class="userPanel hover:bg-white/10 flex items-center justify-center rounded-lg p-2 w-[3rem]">
+                <img src="./assets/windows.png" class="w-[1.7rem] h-[1.7rem]" />
+            </div>
+            <div class="bg-[#2e2e2e] rounded-full w-[14vw] py-1">
+                <span class="text-gray-300 flex items-center gap-2 ml-2">
+                    <i class="ri-search-line text-xl"></i>Search
+                </span>
+            </div>
+            <div id="taskbar-apps" class="flex items-center gap-5">
+
+            </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-gray-200">
+            <div class="hover:bg-white/10 flex items-center justify-center rounded-lg p-2 w-[2.5rem]">
+                <span><i class="ri-arrow-up-s-line text-xl"></i></span>
+            </div>
+            <div class="hover:bg-white/10 flex items-center justify-center rounded-lg p-2 w-[3rem]">
+                <span class="text-center">ENG <br> IN</span>
+            </div>
+            <div class="wifisettings hover:bg-white/10 flex items-center gap-2 rounded-lg p-2 w-[5rem]">
+                <span><i class="ri-wifi-fill text-[1rem]"></i></span>
+                <span><i class="ri-volume-up-fill text-[1rem]"></i></span>
+                <span><i class="ri-battery-fill text-[1rem]"></i></span>
+            </div>
+            <!-- Clock & Calendar -->
+            <div id="clock-panel"
+                class="hover:bg-white/10 flex items-center justify-center rounded-lg p-2 w-[5rem] cursor-pointer">
+                <div class="flex flex-col items-end leading-tight">
+                    <div id="clock">--:--</div>
+                    <div id="date">--/--/----</div>
+                </div>
+            </div>
+
+            <!-- Calendar Panel -->
+            <div id="calendar-panel"
+                class="hidden absolute bottom-[3.8rem] right-[1rem] bg-[#1e1e1e]/90 text-white shadow-lg rounded-xl p-4 w-[300px] z-40">
+                <div class="flex justify-between items-center mb-2">
+                    <button id="prev-month"
+                        class="text-sm px-2 py-1 bg-white/10 rounded hover:bg-white/20">&lt;</button>
+                    <div class="text-center font-semibold text-sm flex-1" id="calendar-month-year">Month Year</div>
+                    <button id="next-month"
+                        class="text-sm px-2 py-1 bg-white/10 rounded hover:bg-white/20">&gt;</button>
+                </div>
+                <div class="grid grid-cols-7 text-xs font-semibold text-center">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-xs mt-2" id="calendar-days"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- App Windows Container -->
+    <div id="app-windows-container" class="absolute inset-0 z-30 pointer-events-none"></div>
+
+    <!-- Quick Settings Panel -->
+    <div
+        class="quickPanel hidden w-[350px] rounded-xl bg-[#1e1e1e]/90 text-white shadow-lg p-4 space-y-4 absolute bottom-[3.8rem] right-5">
+        <div class="topControl grid grid-cols-3 gap-2"></div>
+        <div class="space-y-8">
+            <div>
+                <div class="flex items-center gap-2 mt-10 text-sm">
+                    <i class="ri-sun-line"></i>
+                    <input type="range" id="brightnessSlider" class="w-full accent-blue-500" value="100" />
+                </div>
+            </div>
+            <div class="flex items-center gap-2 mb-10 text-sm">
+                <i class="ri-volume-up-line"></i>
+                <input type="range" class="w-full accent-blue-500" value="70" />
+            </div>
+        </div>
+        <div class="flex justify-between items-center text-sm">
+            <div class="flex items-center gap-1">
+                <i class="ri-battery-2-line"></i>
+                <span>95%</span>
+            </div>
+            <i class="ri-settings-4-line text-lg"></i>
+        </div>
+    </div>
+    <!-- Shutdown Screen -->
+    <div id="shutdown-screen"
+        class="fixed inset-0 bg-black text-white flex flex-col items-center justify-center z-[999] hidden">
+        <img src="./assets/shutdown.gif" alt="Shutting down..." class="w-32 h-32 mb-4" />
+        <h2 class="text-xl font-semibold">Shutting down...</h2>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>

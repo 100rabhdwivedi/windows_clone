@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Camera App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-white font-sans p-4 flex flex-col items-center gap-6 overflow-x-hidden">
+
+  <!-- Header -->
+  <h1 class="text-2xl font-semibold tracking-wide">📷 Modern Camera</h1>
+
+  <!-- Video Feed -->
+  <div
+    class="w-full max-w-2xl aspect-video bg-black rounded-2xl shadow-xl border border-white/10 overflow-hidden backdrop-blur">
+    <video id="video" autoplay playsinline class="w-full h-full object-cover rounded-2xl"></video>
+  </div>
+
+  <!-- Controls -->
+  <div class="flex gap-4">
+    <button id="snap"
+      class="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg shadow transition font-medium text-sm">📸
+      Capture</button>
+    <button id="startRec"
+      class="bg-green-600 hover:bg-green-700 px-5 py-2 rounded-lg shadow transition font-medium text-sm">🎥
+      Record</button>
+    <button id="stopRec"
+      class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg shadow transition font-medium text-sm" disabled>⏹
+      Stop</button>
+  </div>
+
+  <!-- Gallery -->
+  <div id="gallery"
+    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full max-w-5xl mt-6 px-2 overflow-y-auto"></div>
+
+  <canvas id="canvas" class="hidden"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snap = document.getElementById('snap');
+    const startRec = document.getElementById('startRec');
+    const stopRec = document.getElementById('stopRec');
+    const gallery = document.getElementById('gallery');
+    let mediaRecorder, recordedChunks = [];
+
+    // Camera access
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        video.srcObject = stream;
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+        mediaRecorder.onstop = displayVideo;
+      })
+      .catch(err => alert('Camera access denied: ' + err));
+
+    // Capture Image
+    snap.onclick = () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      const imgURL = canvas.toDataURL('image/png');
+      const img = document.createElement('img');
+      img.src = imgURL;
+      img.className = "rounded-xl border border-white/10 shadow-md";
+      gallery.prepend(wrapInBox(img));
+      downloadResource(imgURL, `photo-${Date.now()}.png`);
+    };
+
+    // Start/Stop Recording
+    startRec.onclick = () => {
+      recordedChunks = [];
+      mediaRecorder.start();
+      startRec.disabled = true;
+      stopRec.disabled = false;
+    };
+
+    stopRec.onclick = () => {
+      mediaRecorder.stop();
+      startRec.disabled = false;
+      stopRec.disabled = true;
+    };
+
+    function displayVideo() {
+      const blob = new Blob(recordedChunks, { type: 'video/webm' });
+      const videoURL = URL.createObjectURL(blob);
+      const vid = document.createElement('video');
+      vid.src = videoURL;
+      vid.controls = true;
+      vid.className = "rounded-xl border border-white/10 shadow-md";
+      gallery.prepend(wrapInBox(vid));
+      downloadResource(videoURL, `video-${Date.now()}.webm`);
+    }
+
+    function wrapInBox(el) {
+      const box = document.createElement('div');
+      box.className = "bg-white/5 p-1 rounded-xl";
+      box.appendChild(el);
+      return box;
+    }
+
+    function downloadResource(url, filename) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+    }
+  </script>
+</body>
+
+</html>

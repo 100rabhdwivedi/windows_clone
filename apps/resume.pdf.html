@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Saurabh Dwivedi - MERN Developer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #resume, #resume * {
+        visibility: visible;
+      }
+      #resume {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans leading-relaxed">
+
+  <div class="flex justify-center my-4">
+    <button onclick="window.print()"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm shadow-md">
+      ⬇️ Download PDF
+    </button>
+  </div>
+
+  <div id="resume" class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6">
+
+    <!-- Header with image -->
+    <div class="flex flex-col sm:flex-row items-center sm:items-start border-b pb-4 mb-6 gap-4">
+      <img src="../public/saurabh.png" alt="Saurabh Dwivedi" class="w-28 h-28 object-cover rounded-full shadow-md" />
+      <div class="text-center sm:text-left">
+        <h1 class="text-3xl font-bold">Saurabh Dwivedi</h1>
+        <p class="text-gray-600">MERN Stack Developer</p>
+        <p class="mt-2 text-sm">Email: dwivedi100rabhh@gmail.com |  Location: India</p>
+      
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">👨‍💻 About Me</h2>
+      <p>
+        Passionate and self-driven MERN Stack Developer with hands-on experience in building responsive,
+        scalable web applications using modern technologies like React, Node.js, Express, MongoDB, and Tailwind CSS.
+        I love creating real-world projects and continuously improving my skills.
+      </p>
+    </section>
+
+    <!-- Skills -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">🛠 Skills</h2>
+      <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm list-disc list-inside">
+        <li>HTML5, CSS3</li>
+        <li>Tailwind CSS</li>
+        <li>JavaScript (ES6+)</li>
+        <li>React.js</li>
+        <li>Node.js</li>
+        <li>Express.js</li>
+        <li>MongoDB</li>
+        <li>REST APIs</li>
+        <li>Git & GitHub</li>
+      </ul>
+    </section>
+
+    <!-- Projects -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">🚀 Projects</h2>
+
+      <div class="mb-4">
+        <h3 class="font-semibold">🪟 Windows OS UI Clone</h3>
+        <p class="text-sm">
+          Built a realistic Windows 10/11 clone with working taskbar, file explorer, quick settings,
+          weather widget, and draggable app windows using HTML, Tailwind CSS, and JavaScript.
+        </p>
+        <a href="https://balajiprogrammingacademy.vercel.app/" class="text-blue-600 text-sm">Live Demo</a>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="font-semibold">🌤️ Weather App</h3>
+        <p class="text-sm">
+          Created a responsive weather dashboard using WeatherAPI, modern UI with glassmorphism, location search,
+          and real-time temperature, condition & forecast display.
+        </p>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="font-semibold">📚 Library Management System</h3>
+        <p class="text-sm">
+          Designed frontend for a library app used for Science Day project. Won 1st place.
+          Integrated search, book status, and user management with React + Bootstrap.
+        </p>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">🎓 Education</h2>
+      <p class="text-sm">B.C.A. (Bachelor of Computer Applications)</p>
+    </section>
+
+    <!-- Footer Contact -->
+    <section class="text-center text-sm mt-6 text-gray-500">
+      <p>Made with ❤️ by Saurabh Dwivedi | MERN Developer</p>
+    </section>
+  </div>
+
+</body>
+</html>

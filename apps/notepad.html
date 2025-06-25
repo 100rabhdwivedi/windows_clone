@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Dark Mode Notepad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            background: linear-gradient(to right, #1e1e1e, #2c2c2c);
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 font-sans text-white">
+
+    <!-- Header -->
+    <div class="flex justify-end mb-4">
+        <button onclick="exportNote()"
+            class="text-xs bg-white/10 px-3 py-1 rounded border border-white/10 hover:bg-white/20 transition">
+            🗂 Export
+        </button>
+    </div>
+
+    <!-- Notepad Container -->
+    <div class="px-4 py-2 bg-white/10 shadow-md rounded-xl backdrop-blur-lg max-w-3xl mx-auto">
+        <input type="text" id="note-title" placeholder="Note Title"
+            class="w-full bg-transparent text-white placeholder-gray-400 text-xl font-semibold mb-3 outline-none border-b border-white/10 pb-1" />
+
+        <textarea id="note" placeholder="Start typing..."
+            class="w-full h-[60vh] bg-transparent text-white placeholder-gray-400 text-base outline-none resize-none mb-2"></textarea>
+
+        <div class="flex justify-between items-center text-xs border-t border-white/10 pt-2 text-gray-400">
+            <p id="charCount">0 characters</p>
+            <p id="saveStatus" class="transition-opacity duration-300 opacity-0 text-green-400">Saved ✓</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const titleInput = document.getElementById('note-title');
+        const textarea = document.getElementById('note');
+        const charCount = document.getElementById('charCount');
+        const saveStatus = document.getElementById('saveStatus');
+
+        // Auto Save
+        function saveNote() {
+            const noteData = {
+                title: titleInput.value,
+                content: textarea.value,
+                updated: new Date().toISOString(),
+            };
+            localStorage.setItem('notepad-note', JSON.stringify(noteData));
+            charCount.textContent = `${textarea.value.length} characters`;
+
+            // Show "Saved ✓" animation
+            saveStatus.style.opacity = 1;
+            setTimeout(() => {
+                saveStatus.style.opacity = 0;
+            }, 1200);
+        }
+
+        // Load Note on Start
+        function loadNote() {
+            const note = JSON.parse(localStorage.getItem('notepad-note') || '{}');
+            titleInput.value = note.title || '';
+            textarea.value = note.content || '';
+            charCount.textContent = `${textarea.value.length} characters`;
+        }
+
+        // Export Note as .txt
+        function exportNote() {
+            const blob = new Blob([`Title: ${titleInput.value}\n\n${textarea.value}`], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = (titleInput.value || 'untitled') + '.txt';
+            a.click();
+        }
+
+        // Event Listeners
+        titleInput.addEventListener('input', saveNote);
+        textarea.addEventListener('input', saveNote);
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', loadNote);
+    </script>
+</body>
+
+</html>
