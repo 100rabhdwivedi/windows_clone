@@ -58,9 +58,27 @@ nextMonthBtn.addEventListener('click', () => {
 
 renderCalendar(currentDate);
 // Fetch and Display Weather
+let userLocation = "rewa"; // default in case location access na mile
+function detectLocationAndFetchWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            userLocation = `${lat},${lon}`;
+            await getWeather();
+        }, async (err) => {
+            console.warn("Location access denied or unavailable, using default:", err);
+            await getWeather(); // fallback to default
+        });
+    } else {
+        console.warn("Geolocation not supported, using default location.");
+        getWeather();
+    }
+}
+
 async function getWeather() {
     try {
-        const res = await fetch('https://api.weatherapi.com/v1/current.json?key=8d084dc36b1d426b8fc83544252006&q=rewa');
+        const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=8d084dc36b1d426b8fc83544252006&q=${userLocation}`);
         const data = await res.json();
         const temp = data.current.temp_c;
         const condition = data.current.condition.text;
@@ -75,8 +93,9 @@ async function getWeather() {
         document.getElementById("weather-info").textContent = "Weather unavailable";
     }
 }
-getWeather();
-setInterval(getWeather, 600000);
+detectLocationAndFetchWeather();
+setInterval(getWeather, 600000); // 10 min refresh
+
 
 // Render Desktop Icons
 function DesktopIconShow() {
